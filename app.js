@@ -1,4 +1,4 @@
-const apiKey = "b1a08983" // http://www.omdbapi.com/
+const apiKey = "" // get yours at http://www.omdbapi.com/
 let $index = 1;
 $.ajax({
     type: 'GET',
