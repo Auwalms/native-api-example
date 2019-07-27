@@ -1,34 +1,36 @@
-const apiKey = "b1a08983" // http://www.omdbapi.com/
-let $index = 1;
-$.ajax({
-    type: 'GET',
-    url: 'http://www.omdbapi.com/?apikey=' + apiKey + '&s=batman',
-    success: function (resp) {
-        _.each(resp.Search, displayAlbums)
-    },
-    error: function (error) {
-        console.log("failed with error: ", error)
-    }
-});
+const apiKey = ""; // get yours from http://www.omdbapi.com/;
 
+fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=batman&page=2`)
+    .then(response => response.json())
+    .then(response => {
+        if (!response.Response) {
+            console.error("You are on your own!")
+        } else {
+            let albums = response.Search;
+            albums.forEach((album, $index) => {
+                displayAlbums(album, $index);
+            });
+        }
+    })
+    .catch(error => console.error(error))
 
-function displayAlbums(albums) {
-    $("tbody").append(createAlbumHTML(albums));
+function displayAlbums(albums, $index) {
+    document.querySelector("tbody").append(createAlbumHTML(albums, $index));
 }
 
-function createAlbumHTML(album) {
-    console.log(album.Title)
+function createAlbumHTML(album, $index) {
     let albumRow = document.createElement('tr');
     let serialNOData = document.createElement("td");
-    serialNOData.innerHTML = $index++;
+    serialNOData.innerHTML = $index + 1;
     let albumTitleData = document.createElement("td");
     albumTitleData.innerHTML = album.Title;
     let albumYearData = document.createElement("td");
     albumYearData.innerHTML = album.Year;
     let albumPosterData = document.createElement("td");
-    const posterImage = document.createElement("img");
+    let posterImage = document.createElement("img");
     posterImage.src = album.Poster;
-    posterImage.classList.add("image", "lazy");
+    posterImage.classList.add("image", "is-128x128");
+    posterImage.setAttribute("loading", "lazy");
     albumPosterData.appendChild(posterImage);
 
     albumRow.appendChild(serialNOData);
